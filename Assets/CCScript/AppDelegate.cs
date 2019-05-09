@@ -9,15 +9,17 @@ namespace SLuaTest
 {
     public class AppDelegate : MonoBehaviour {
 
+
 	    // Use this for initialization
 	    void Start () {
             ScriptManager.Instance.Init();
-	    }
+
+        }
 	
 	    // Update is called once per frame
 	    void Update () {
-		
-	    }
+            ScriptManager.Instance.OnUpdate();
+        }
 
 
     }

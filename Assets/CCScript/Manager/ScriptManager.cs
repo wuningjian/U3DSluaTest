@@ -27,7 +27,30 @@ namespace SLuaTest
             LuaState.main.loaderDelegate = RawFileLoader;
 
             mLuaGameObj = (LuaTable)mLuaServer.start("hello");
+            if (mLuaGameObj != null)
+            {
+                mLuaUpdateFunc = (LuaFunction)mLuaGameObj["Update"];
+            }
+            else
+            {
+                Debug.LogError("ScriptManager: Load hello.lua Error");
+            }
 
+            mLoadFinish = true;
+
+        }
+
+        public void OnUpdate()
+        {
+            if (mLoadFinish) {
+                mLuaUpdateFunc.call();
+            }
+            
+        }
+
+        public void CallFunc(string name)
+        {
+            
         }
         
         private byte[] RawFileLoader(string name, ref string absoluteFn)
