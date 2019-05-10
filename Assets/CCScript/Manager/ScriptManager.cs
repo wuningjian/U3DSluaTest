@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using SLua;
 
-namespace SLuaTest
+namespace SLuaTestSp
 {
     public class ScriptManager : Singleton<ScriptManager>
     {
@@ -26,17 +26,17 @@ namespace SLuaTest
         {
             LuaState.main.loaderDelegate = RawFileLoader;
 
-            mLuaGameObj = (LuaTable)mLuaServer.start("hello");
+            //string initLua = @"return require(""main"")";
+            mLuaGameObj = (LuaTable)mLuaServer.start("main");
             if (mLuaGameObj != null)
             {
                 mLuaUpdateFunc = (LuaFunction)mLuaGameObj["Update"];
+                mLoadFinish = true;
             }
             else
             {
                 Debug.LogError("ScriptManager: Load hello.lua Error");
             }
-
-            mLoadFinish = true;
 
         }
 
@@ -45,12 +45,24 @@ namespace SLuaTest
             if (mLoadFinish) {
                 mLuaUpdateFunc.call();
             }
-            
         }
 
-        public void CallFunc(string name)
+        public bool CallFunc(string name)
         {
-            
+            if (mLuaGameObj == null)
+            {
+                return false;
+            }
+            LuaFunction func = (LuaFunction)mLuaGameObj[name];
+            if (func != null)
+            {
+                func.call();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         
         private byte[] RawFileLoader(string name, ref string absoluteFn)
@@ -60,21 +72,28 @@ namespace SLuaTest
 
             string mScriptPath = Application.dataPath + "/LuaScript/";
             string path = FileUtils.CombinePath(mScriptPath, name.Replace('.', '/') + ".lua");
+            byte[] data = null;
 
             Debug.Log("文件路径拼接:" + path);
 
             if (!File.Exists(path))
             {
+                Debug.LogError("文件路径文件不存在");
                 return null;
             }
 
+            data = File.ReadAllBytes(path);
+            return data;
+
             // using(obj) using 语句允许程序员指定使用资源的对象应当何时释放资;obj须内部实现了IDisposable接口，用于释放obj
-            using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
-            {
-                byte[] data = new byte[stream.Length];
-                stream.Read(data, 0, data.Length);
-                return data;
-            }
+            //using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            //{
+            //    byte[] data = new byte[stream.Length];
+            //    stream.Read(data, 0, data.Length);
+            //    return data;
+            //}
+
+
         }
 
         public void StartLoadScript()

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SLuaTest
+namespace SLuaTestSp
 {
     public class Singleton<T> where T :class, new()
     {
