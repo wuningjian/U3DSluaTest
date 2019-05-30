@@ -78,7 +78,7 @@ namespace SLuaTestSp
 
             if (!File.Exists(path))
             {
-                Debug.LogError("文件路径文件不存在");
+                Debug.LogError(path+"文件路径文件不存在");
                 return null;
             }
 
@@ -93,19 +93,6 @@ namespace SLuaTestSp
             //    return data;
             //}
 
-
-        }
-
-        public void StartLoadScript()
-        {
-            if (mLoadFinish)
-                return;
-
-            
-        }
-
-        private void LoadScriptRawMode()
-        {
 
         }
     }

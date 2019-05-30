@@ -17,7 +17,7 @@ namespace SLuaTestSp
 	
 	    // Update is called once per frame
 	    void Update () {
-            //ScriptManager.Instance.OnUpdate();
+            ScriptManager.Instance.OnUpdate();
         }
 
 
