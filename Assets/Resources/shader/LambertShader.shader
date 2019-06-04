@@ -1,4 +1,6 @@
-﻿Shader "Unlit/LambertShader"
+﻿// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+
+Shader "Unlit/LambertShader"
 {
 	Properties
 	{
@@ -21,7 +23,7 @@
 			{
 				float4 vertex : POSITION;
 				float2 uv : TEXCOORD0;
-				float3 normal : NORMAL;
+				float3 normal : NORMAL; // 
 			};
 
 			struct v2f
@@ -35,12 +37,14 @@
 			float4 _MainTex_ST;
 			float _DiffusePower;
 			
-			v2f vert (appdata_base v)
+			v2f vert (appdata v)
 			{
 				v2f o;
+				// o.vertex = mul(UNITY_MATRIX_MVP, v.vertex); // UnityObjectToClipPos原理-MVP矩阵和顶点矩阵相乘
 				o.vertex = UnityObjectToClipPos(v.vertex);
-				//o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-				o.uv = v.texcoord;
+				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+				
+				// o.normalDir = mul(v.normal, (float3x3)unity_WorldToObject); //UnityObjectToWorldNormal原理-法线坐标系转换
 				o.normalDir = UnityObjectToWorldNormal(v.normal); //顶点法线
 				return o;
 			}
